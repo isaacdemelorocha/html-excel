@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Dados do Excel</title>
+
+    <!-- Incluindo o Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .container {
+            background-color: #007bff;
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+        .card-custom {
+            width: 22%;
+            min-width: 250px;
+            height: 200px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card-custom:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .cell {
+            background-color: #f7f7f7;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 1.9rem;
+            color: #333;
+            border: 2px solid #007bff;
+            text-align: center;
+            height: 100%;
+        }
+
+        /* Cores personalizadas */
+        .card-custom:nth-child(1) {
+            background-color: #ffb3b3;
+        }
+
+        .card-custom:nth-child(2) {
+            background-color: #b3ffb3;
+        }
+
+        .card-custom:nth-child(3) {
+            background-color: #b3d9ff;
+        }
+
+        .card-custom:nth-child(4) {
+            background-color: #ffcc99;
+        }
+
+        .card-header:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="text-center">Dashboard de Dados do Excel</h1>
+
+        <!-- Dashboard com as divisórias -->
+        <div class="dashboard-container">
+            <!-- Divisória 1 - A2 -->
+            <div class="card-custom">
+                <div class="card-header">Quantidade <p>Treinamentos</div>
+                <div class="cell" id="div1">Aguardando dados...</div>
+            </div>
+            <!-- Divisória 2 - B2 -->
+            <div class="card-custom">
+                <div class="card-header">Pessoas Capacitadas</div>
+                <div class="cell" id="div2">Aguardando dados...</div>
+            </div>
+            <!-- Divisória 3 - C2 -->
+            <div class="card-custom">
+                <div class="card-header">Horas de treinamento</div>
+                <div class="cell" id="div3">Aguardando dados...</div>
+            </div>
+            <!-- Divisória 4 - D2 -->
+            <div class="card-custom">
+                <div class="card-header">Avaliação <p>NPS Média</div>
+                <div class="cell" id="div4">Aguardando dados...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluindo a biblioteca SheetJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+
+    <script>
+        // URL do arquivo Excel fixo (na mesma pasta que o index.html)
+        var url = 'excel.xlsx'; // Certifique-se de que o arquivo Excel está na mesma pasta que o index.html
+
+        // Função para carregar e processar o arquivo Excel automaticamente ao carregar a página
+        window.onload = function() {
+            fetch(url)
+                .then(response => response.arrayBuffer())
+                .then(data => {
+                    var workbook = XLSX.read(data, { type: 'array' });
+
+                    // Pegando a primeira planilha
+                    var sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+                    // Pegar os dados específicos das células A2, B2, C2 e D2
+                    var cellA2 = sheet['A2'] ? sheet['A2'].v : 'Sem dados';
+                    var cellB2 = sheet['B2'] ? sheet['B2'].v : 'Sem dados';
+                    var cellC2 = sheet['C2'] ? sheet['C2'].v : 'Sem dados';
+                    var cellD2 = sheet['D2'] ? sheet['D2'].v : 'Sem dados';
+
+                    // Preencher as divisórias com os dados das células A2, B2, C2 e D2
+                    preencherDivisorias(cellA2, cellB2, cellC2, cellD2);
+                })
+                .catch(error => {
+                    console.error("Erro ao carregar o arquivo Excel:", error);
+                });
+        };
+
+        function preencherDivisorias(cellA2, cellB2, cellC2, cellD2) {
+            // Atualizando os dados nas divisórias
+            document.getElementById('div1').innerHTML = `<strong>${cellA2}</strong>`;
+            document.getElementById('div2').innerHTML = `<strong>${cellB2}</strong>`;
+            document.getElementById('div3').innerHTML = `<strong>${cellC2}</strong>`;
+            document.getElementById('div4').innerHTML = `<strong>${cellD2}</strong>`;
+        }
+    </script>
+
+</body>
+</html>
